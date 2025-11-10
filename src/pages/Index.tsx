@@ -5,14 +5,15 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import Icon from '@/components/ui/icon';
 import { toast } from 'sonner';
 
 const Index = () => {
   const [selectedCategory, setSelectedCategory] = useState('Все');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
-    phone: '',
     email: '',
     message: ''
   });
@@ -53,7 +54,7 @@ const Index = () => {
   const handleModelSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     toast.success('Спасибо! Мы свяжемся с вами в ближайшее время');
-    setFormData({ name: '', phone: '', email: '', message: '' });
+    setFormData({ name: '', email: '', message: '' });
   };
 
   return (
@@ -71,10 +72,69 @@ const Index = () => {
             <a href="#delivery" className="hover:text-primary transition-colors">Доставка</a>
             <a href="#contacts" className="hover:text-primary transition-colors">Контакты</a>
           </div>
-          <Button size="sm" className="bg-gradient-to-r from-primary to-secondary">
-            <Icon name="ShoppingCart" size={18} className="mr-2" />
-            Корзина
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button size="sm" className="hidden sm:flex bg-gradient-to-r from-primary to-secondary">
+              <Icon name="ShoppingCart" size={18} className="mr-2" />
+              Корзина
+            </Button>
+            <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+              <SheetTrigger asChild>
+                <Button size="sm" variant="outline" className="md:hidden">
+                  <Icon name="Menu" size={20} />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+                <nav className="flex flex-col gap-6 mt-8">
+                  <a 
+                    href="#hero" 
+                    className="text-lg hover:text-primary transition-colors"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Главная
+                  </a>
+                  <a 
+                    href="#catalog" 
+                    className="text-lg hover:text-primary transition-colors"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Каталог
+                  </a>
+                  <a 
+                    href="#jobs" 
+                    className="text-lg hover:text-primary transition-colors"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Вакансии
+                  </a>
+                  <a 
+                    href="#about" 
+                    className="text-lg hover:text-primary transition-colors"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    О бренде
+                  </a>
+                  <a 
+                    href="#delivery" 
+                    className="text-lg hover:text-primary transition-colors"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Доставка
+                  </a>
+                  <a 
+                    href="#contacts" 
+                    className="text-lg hover:text-primary transition-colors"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Контакты
+                  </a>
+                  <Button className="bg-gradient-to-r from-primary to-secondary mt-4">
+                    <Icon name="ShoppingCart" size={18} className="mr-2" />
+                    Корзина
+                  </Button>
+                </nav>
+              </SheetContent>
+            </Sheet>
+          </div>
         </div>
       </nav>
 
@@ -89,10 +149,10 @@ const Index = () => {
                   начинается с ног
                 </span>
               </h1>
-              <p className="text-lg text-muted-foreground mb-8">
+              <p className="text-base md:text-lg text-muted-foreground mb-8">
                 Стильная и комфортная домашняя обувь для всей семьи. Создаём уникальные модели с любовью к деталям.
               </p>
-              <div className="flex gap-4">
+              <div className="flex flex-col sm:flex-row gap-4">
                 <Button size="lg" className="bg-gradient-to-r from-primary to-secondary hover:opacity-90">
                   <Icon name="ShoppingBag" size={20} className="mr-2" />
                   Смотреть каталог
@@ -194,25 +254,14 @@ const Index = () => {
             </CardHeader>
             <CardContent>
               <form onSubmit={handleModelSubmit} className="space-y-4">
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-sm font-medium mb-2 block">Имя</label>
-                    <Input 
-                      placeholder="Ваше имя"
-                      value={formData.name}
-                      onChange={(e) => setFormData({...formData, name: e.target.value})}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium mb-2 block">Телефон</label>
-                    <Input 
-                      placeholder="+7 (___) ___-__-__"
-                      value={formData.phone}
-                      onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                      required
-                    />
-                  </div>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">Имя</label>
+                  <Input 
+                    placeholder="Ваше имя"
+                    value={formData.name}
+                    onChange={(e) => setFormData({...formData, name: e.target.value})}
+                    required
+                  />
                 </div>
                 <div>
                   <label className="text-sm font-medium mb-2 block">Email</label>
@@ -395,29 +444,15 @@ const Index = () => {
       <section id="contacts" className="py-16 px-4">
         <div className="container mx-auto max-w-4xl text-center">
           <h2 className="text-4xl font-bold mb-8">Контакты</h2>
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="max-w-md mx-auto">
             <Card>
               <CardContent className="pt-6">
-                <Icon name="Phone" size={40} className="mx-auto mb-3 text-primary" />
-                <h3 className="font-bold mb-2">Телефон</h3>
-                <p className="text-muted-foreground">+7 (495) 123-45-67</p>
-                <p className="text-sm text-muted-foreground mt-1">Пн-Пт: 9:00-21:00</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="pt-6">
-                <Icon name="Mail" size={40} className="mx-auto mb-3 text-secondary" />
-                <h3 className="font-bold mb-2">Email</h3>
-                <p className="text-muted-foreground">info@cozyhome.ru</p>
-                <p className="text-sm text-muted-foreground mt-1">Ответим в течение 24ч</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="pt-6">
-                <Icon name="MapPin" size={40} className="mx-auto mb-3 text-accent" />
-                <h3 className="font-bold mb-2">Адрес</h3>
-                <p className="text-muted-foreground">г. Москва</p>
-                <p className="text-sm text-muted-foreground mt-1">ул. Примерная, д. 1</p>
+                <Icon name="Mail" size={48} className="mx-auto mb-4 text-primary" />
+                <h3 className="font-bold text-xl mb-3">Напишите нам</h3>
+                <a href="mailto:cozy.cloud@mail.ru" className="text-lg text-primary hover:underline">
+                  cozy.cloud@mail.ru
+                </a>
+                <p className="text-sm text-muted-foreground mt-2">Ответим в течение 24 часов</p>
               </CardContent>
             </Card>
           </div>
